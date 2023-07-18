@@ -1,4 +1,6 @@
 using LibraryAPI.Entities;
+using LibraryAPI.Interfaces;
+using LibraryAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAPI
@@ -16,7 +18,7 @@ namespace LibraryAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDB")));
-
+            builder.Services.AddScoped<IBookService, BookService>();
 
             var app = builder.Build();
 

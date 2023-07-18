@@ -5,8 +5,8 @@ namespace LibraryAPI.Entities
 {
     public class LibraryDbContext : DbContext
     {
-        public DbSet<Book> Books;
-        public DbSet<Category> Categories;
+        public DbSet<Book> Book { get; set; }
+        public DbSet<Category> Category { get; set; }
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options)
         : base(options)
         {

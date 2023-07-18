@@ -10,7 +10,7 @@
         public int NumberOfPages { get; set; }
         public virtual Category Category { get; set; }
         public int CategoryID { get; set; }
-
+        public string Base64Cover { get; set; }
 
     }
 }

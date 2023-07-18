@@ -1,5 +1,6 @@
 using LibraryAPI.Entities;
 using LibraryAPI.Interfaces;
+using LibraryAPI.Middleware;
 using LibraryAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +20,10 @@ namespace LibraryAPI
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDB")));
             builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<ExceptionHandler>();
 
             var app = builder.Build();
+            app.UseMiddleware<ExceptionHandler>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

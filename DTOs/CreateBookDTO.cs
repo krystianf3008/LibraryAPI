@@ -9,7 +9,7 @@ namespace LibraryAPI.DTOs
         public string Author { get; set; }
         public int PublicationYear { get; set; }
         public int NumberOfPages { get; set; }
-        public int CategoryID { get; set; }
+        public string CategoryName { get; set; }
         public IFormFile Cover { get; set; }
 
     }

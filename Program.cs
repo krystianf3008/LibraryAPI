@@ -19,6 +19,7 @@ namespace LibraryAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDB")));
+            builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ExceptionHandler>();
 

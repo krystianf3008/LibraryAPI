@@ -18,13 +18,13 @@ namespace LibraryAPI.Controllers
 
         [HttpGet("/api/books/")]
 
-        public async Task<ActionResult<List<Book>>> GetAll()
+        public async Task<ActionResult<List<BookDTO>>> GetAll()
         {
             return Ok(await _bookService.GetAll());
         }
 
         [HttpGet("/api/books/{id}")]
-        public async Task<ActionResult<Book>> Get([FromRoute] Guid id)
+        public async Task<ActionResult<OneBookDTO>> Get([FromRoute] Guid id)
         {
             return  Ok(await _bookService.GetById(id));
         }

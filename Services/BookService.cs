@@ -1,4 +1,6 @@
-﻿using LibraryAPI.DTOs;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using LibraryAPI.DTOs;
 using LibraryAPI.Entities;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Interfaces;
@@ -10,18 +12,20 @@ namespace LibraryAPI.Services
     public class BookService : IBookService
     {
         private readonly LibraryDbContext _dbContext;
-        public BookService(LibraryDbContext dbContext)
+        private readonly IMapper _mapper;
+        public BookService(LibraryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task<IEnumerable<Book>> GetAll()
+        public async Task<IEnumerable<BookDTO>> GetAll()
         {
 
-            return _dbContext.Book.Include(b => b.Category).ToList();
+            return await _dbContext.Book.Include(b => b.Category).ProjectTo<BookDTO>(_mapper.ConfigurationProvider).ToListAsync();
         }
-        public async Task<Book> GetById(Guid id)
+        public async Task<OneBookDTO> GetById(Guid id)
         {
-            var book = _dbContext.Book.FirstOrDefault(b => b.Id == id);
+            var book = _dbContext.Book.Include(b => b.Category).ProjectTo<OneBookDTO>(_mapper.ConfigurationProvider).FirstOrDefault(b => b.Id == id);
             if (book == null)
             {
                 throw new NotFoundException("The book you are trying to get does not exist");
@@ -37,19 +41,9 @@ namespace LibraryAPI.Services
                 byte[] imageBytes = memoryStream.ToArray();
                 base64Image = Convert.ToBase64String(imageBytes);
             }
+                Book book = _mapper.Map<Book>(createBookDTO);
 
-            Book book = new Book()
-                {
-                    Id = Guid.NewGuid(),
-                    Title = createBookDTO.Title,
-                    Description = createBookDTO.Description,
-                    Author = createBookDTO.Author,
-                    PublicationYear = createBookDTO.PublicationYear,
-                    NumberOfPages = createBookDTO.NumberOfPages,
-                    CategoryID = createBookDTO.CategoryID,
-                    Base64Cover = base64Image
-
-                };
+                book.Base64Cover= base64Image;
                 _dbContext.Book.Add(book);
                 _dbContext.SaveChanges();
                 return book.Id;

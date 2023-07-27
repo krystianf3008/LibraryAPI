@@ -53,9 +53,6 @@ namespace LibraryAPI.Services
                 _dbContext.Book.Add(book);
                 _dbContext.SaveChanges();
                 return book.Id;
-
-
-            
         }
         public async Task UpdateBook(Guid id, UpdateBookDTO updateBookDTO)
         {
@@ -96,7 +93,3 @@ namespace LibraryAPI.Services
     }
     
 }
-
-
-    
-

@@ -29,6 +29,13 @@ namespace LibraryAPI
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    var dbContext = services.GetRequiredService<LibraryDbContext>();
+                    LibrarySeeder seeder = new LibrarySeeder(dbContext);
+                    seeder.Seed();
+                }
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

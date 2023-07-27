@@ -15,7 +15,6 @@ namespace LibraryAPI.Controllers
             _bookService = bookService;
         }
 
-
         [HttpGet("/api/books/")]
 
         public async Task<ActionResult<List<BookDTO>>> GetAll()

@@ -20,7 +20,6 @@ namespace LibraryAPI.Services
         }
         public async Task<IEnumerable<BookDTO>> GetAll()
         {
-
             return await _dbContext.Book.Include(b => b.Category).ProjectTo<BookDTO>(_mapper.ConfigurationProvider).ToListAsync();
         }
         public async Task<OneBookDTO> GetById(Guid id)
@@ -34,42 +33,19 @@ namespace LibraryAPI.Services
         }
         public async Task<Guid> CreateBook(CreateBookDTO createBookDTO)
         {
-            string base64Image;
-            using (var memoryStream = new MemoryStream())
-            {
-                createBookDTO.Cover.CopyTo(memoryStream);
-                byte[] imageBytes = memoryStream.ToArray();
-                base64Image = Convert.ToBase64String(imageBytes);
-            }
                 Book book = _mapper.Map<Book>(createBookDTO);
-
-                book.Base64Cover= base64Image;
                 _dbContext.Book.Add(book);
                 _dbContext.SaveChanges();
                 return book.Id;
         }
         public async Task UpdateBook(Guid id, UpdateBookDTO updateBookDTO)
         {
-            var book = _dbContext.Book.FirstOrDefault(b => b.Id == id);
-            if (book == null)
+            var bookToUpdate = _dbContext.Book.FirstOrDefault(b => b.Id == id);
+            if (bookToUpdate == null)
             {
                 throw new NotFoundException("The book you are trying to edit does not exist");
             }
-            string base64Image;
-            using (var memoryStream = new MemoryStream())
-            {
-                updateBookDTO.Cover.CopyTo(memoryStream);
-                byte[] imageBytes = memoryStream.ToArray();
-                base64Image =  Convert.ToBase64String(imageBytes);
-            }
-
-            book.Title = updateBookDTO.Title;
-            book.Description = updateBookDTO.Description;
-            book.Author = updateBookDTO.Author;
-            book.PublicationYear = updateBookDTO.PublicationYear;
-            book.NumberOfPages = updateBookDTO.NumberOfPages;
-            book.CategoryID = updateBookDTO.CategoryID;
-            book.Base64Cover= base64Image;
+            _mapper.Map(updateBookDTO, bookToUpdate);
 
             _dbContext.SaveChanges();
         }
@@ -82,7 +58,6 @@ namespace LibraryAPI.Services
             }
             _dbContext.Book.Remove(book);
             _dbContext.SaveChanges();
-
         }
     }
     

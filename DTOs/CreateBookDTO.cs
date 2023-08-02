@@ -1,5 +1,4 @@
-﻿using LibraryAPI.Models;
-
+﻿
 namespace LibraryAPI.DTOs
 {
     public class CreateBookDTO

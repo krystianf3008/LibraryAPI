@@ -18,6 +18,10 @@ namespace LibraryAPI.DTOs
                 .ForMember(bd => bd.CategoryName, b => b.MapFrom(c => c.Category.Name));
             CreateProjection<Book, OneBookDTO>()
                 .ForMember(bd => bd.CategoryName, b => b.MapFrom(c => c.Category.Name));
+            CreateProjection<Category, CreateCategoryDTO>();
+            CreateProjection<CreateCategoryDTO, Category>();
+            CreateMap<Category, CreateCategoryDTO>();
+            CreateMap<CreateCategoryDTO, Category>();
         }
     } 
 }

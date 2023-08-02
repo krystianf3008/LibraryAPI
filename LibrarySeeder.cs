@@ -38,7 +38,7 @@ namespace LibraryAPI
                 Author = "Isaac Asimov",
                 PublicationYear = 1951,
                 NumberOfPages = 320,
-                CategoryID = 1,
+                CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Fantastyka naukowa").Id,
                 Base64Cover = "base64_encoded_cover_image"
             },
             new Book
@@ -48,7 +48,7 @@ namespace LibraryAPI
                 Author = "Isaac Asimov",
                 PublicationYear = 1952,
                 NumberOfPages = 288,
-                CategoryID = 1,
+                CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Fantastyka naukowa").Id,
                 Base64Cover = "base64_encoded_cover_image"
             },
             new Book
@@ -58,7 +58,7 @@ namespace LibraryAPI
                 Author = "Fiodor Dostojewski",
                 PublicationYear = 1866,
                 NumberOfPages = 608,
-                CategoryID = 2,
+                CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
                 Base64Cover = "base64_encoded_cover_image"
             },
             new Book
@@ -68,7 +68,7 @@ namespace LibraryAPI
                 Author = "Fiodor Dostojewski",
                 PublicationYear = 1880,
                 NumberOfPages = 824,
-                CategoryID = 2,
+                CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
                 Base64Cover = "base64_encoded_cover_image"
             },
             new Book
@@ -78,7 +78,7 @@ namespace LibraryAPI
                 Author = "Bolesław Prus",
                 PublicationYear = 1890,
                 NumberOfPages = 632,
-                CategoryID = 2,
+                CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
                 Base64Cover = "base64_encoded_cover_image"
             }
         };
@@ -89,9 +89,9 @@ namespace LibraryAPI
         {
             List<Category> categories = new List<Category>
         {
-            new Category { Id = 1, Name = "Fantastyka naukowa" },
-            new Category { Id = 2, Name = "Literatura piękna" },
-            new Category { Id = 3, Name = "Literatura historyczna" }
+            new Category { Name = "Fantastyka naukowa" },
+            new Category { Name = "Literatura piękna" },
+            new Category { Name = "Literatura historyczna" }
             
         };
 

@@ -8,7 +8,7 @@ namespace LibraryAPI.Interfaces
         public Task<IEnumerable<BookDTO>> GetAll();
         public Task<OneBookDTO> GetById(Guid id);
         public Task<Guid> CreateBook(CreateBookDTO createBookDTO);
-        public Task UpdateBook(Guid id, UpdateBookDTO updateBookDTO);
+        public Task UpdateBook(Guid id, CreateBookDTO updateBookDTO);
         public Task DeleteBook(Guid id);
     }
 }

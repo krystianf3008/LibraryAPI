@@ -38,7 +38,7 @@ namespace LibraryAPI.Services
                 _dbContext.SaveChanges();
                 return book.Id;
         }
-        public async Task UpdateBook(Guid id, UpdateBookDTO updateBookDTO)
+        public async Task UpdateBook(Guid id, CreateBookDTO updateBookDTO)
         {
             var bookToUpdate = _dbContext.Book.FirstOrDefault(b => b.Id == id);
             if (bookToUpdate == null)

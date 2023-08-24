@@ -6,6 +6,7 @@ namespace LibraryAPI.Entities
     {
         public DbSet<Book> Book { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Author> Author { get; set; }
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options)
         : base(options)
         {
@@ -20,14 +21,22 @@ namespace LibraryAPI.Entities
             .Property(b => b.Description)
             .HasMaxLength(1000);
         modelBuilder.Entity<Category>()
-                .Property(c => c.Name)
-                .IsRequired();
+            .Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(150);
         modelBuilder.Entity<Category>()
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
+            .Property(c => c.Id)
+            .ValueGeneratedOnAdd();
         modelBuilder.Entity<Category>()
-                .HasIndex(c => c.Name)
-                .IsUnique();
+            .HasIndex(c => c.Name)
+            .IsUnique();
+        modelBuilder.Entity<Author>()
+            .HasIndex(a => a.FullName)
+            .IsUnique();
+        modelBuilder.Entity<Author>()
+            .Property(a => a.FullName)
+            .IsRequired()
+            .HasMaxLength(150);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace LibraryAPI
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<ExceptionHandler>();
 
             var app = builder.Build();

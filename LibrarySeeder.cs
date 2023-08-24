@@ -14,17 +14,22 @@ namespace LibraryAPI
         {
             if(_context.Database.CanConnect())
             {
+                if (!_context.Author.Any())
+                {
+                    _context.Author.AddRange(GetAuthors());
+                    _context.SaveChanges();
+                }
                 if (!_context.Category.Any())
                 {
                     _context.Category.AddRange(GetCategories());
                     _context.SaveChanges();
                 }
-
                 if (!_context.Book.Any())
                 {
                     _context.Book.AddRange(GetBooks());
                     _context.SaveChanges();
                 }
+
             }
         }
         public List<Book> GetBooks()
@@ -35,7 +40,7 @@ namespace LibraryAPI
             {
                 Title = "Fundacja",
                 Description = "Pierwsza część trylogii Fundacja.",
-                Author = "Isaac Asimov",
+                AuthorID = _context.Author.FirstOrDefault(a => a.FullName == "Isaac Asimov").Id,
                 PublicationYear = 1951,
                 NumberOfPages = 320,
                 CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Fantastyka naukowa").Id,
@@ -45,7 +50,7 @@ namespace LibraryAPI
             {
                 Title = "Fundacja i Imperium",
                 Description = "Druga część trylogii Fundacja.",
-                Author = "Isaac Asimov",
+                AuthorID = _context.Author.FirstOrDefault(a => a.FullName == "Isaac Asimov").Id ,
                 PublicationYear = 1952,
                 NumberOfPages = 288,
                 CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Fantastyka naukowa").Id,
@@ -55,7 +60,7 @@ namespace LibraryAPI
             {
                 Title = "Zbrodnia i kara",
                 Description = "Powieść kryminalna Fiodora Dostojewskiego.",
-                Author = "Fiodor Dostojewski",
+                AuthorID = _context.Author.FirstOrDefault(a => a.FullName == "Fiodor Dostojewski").Id,
                 PublicationYear = 1866,
                 NumberOfPages = 608,
                 CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
@@ -65,7 +70,7 @@ namespace LibraryAPI
             {
                 Title = "Bracia Karamazow",
                 Description = "Ostatnia powieść Fiodora Dostojewskiego.",
-                Author = "Fiodor Dostojewski",
+                AuthorID = _context.Author.FirstOrDefault(a => a.FullName == "Fiodor Dostojewski").Id,
                 PublicationYear = 1880,
                 NumberOfPages = 824,
                 CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
@@ -75,7 +80,7 @@ namespace LibraryAPI
             {
                 Title = "Lalka",
                 Description = "Jedno z najważniejszych dzieł polskiej literatury.",
-                Author = "Bolesław Prus",
+                AuthorID = _context.Author.FirstOrDefault(c => c.FullName == "Bolesław Prus").Id,
                 PublicationYear = 1890,
                 NumberOfPages = 632,
                 CategoryID = _context.Category.FirstOrDefault(c => c.Name == "Literatura piękna").Id,
@@ -97,6 +102,39 @@ namespace LibraryAPI
 
 
             return categories;
+        }
+
+        public List<Author> GetAuthors()
+        {
+            List<Author> authors = new List<Author>
+    {
+        new Author
+        {
+            FullName = "Fiodor Dostojewski",
+            Country = "Rosja",
+            BirthYear = 1821,
+            Description = "Rosyjski pisarz i filozof.",
+            Base64Photo = "base64_encoded_author_photo"
+        },
+        new Author
+        {
+            FullName = "Isaac Asimov",
+            Country = "Stany Zjednoczone",
+            BirthYear = 1920,
+            Description = "Amerykański pisarz i profesor biochemii.",
+            Base64Photo = "base64_encoded_author_photo"
+        },
+        new Author
+        {
+            FullName = "Bolesław Prus",
+            Country = "Polska",
+            BirthYear = 1847,
+            Description = "Polski pisarz, publicysta i filozof.",
+            Base64Photo = "base64_encoded_author_photo"
+        }
+    };
+
+            return authors;
         }
 
     }

@@ -23,15 +23,15 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet("/api/category/{id}")]
-        public async Task<ActionResult<CreateCategoryDTO>> Get([FromRoute] int id)
+        public async Task<ActionResult<List<BookDTO>>> Get([FromRoute] int id)
         {
             return Ok(await _categoryService.GetBooks(id));
         }
         [HttpPost("/api/category/")]
-        public async Task<ActionResult> Create([FromForm] CreateCategoryDTO createBookDTO)
+        public async Task<ActionResult> Create([FromForm] CreateCategoryDTO createCategoryDTO)
         {
-            var id = await _categoryService.CreateCategory(createBookDTO);
-            return Created($"/api/books/{id}", null);
+            var id = await _categoryService.CreateCategory(createCategoryDTO);
+            return Created($"/api/category/{id}", null);
         }
 
         [HttpPut("/api/category/{id}")]

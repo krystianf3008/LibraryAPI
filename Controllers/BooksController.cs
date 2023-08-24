@@ -35,9 +35,9 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpPut("/api/books/{id}")]
-        public async Task<ActionResult> Update([FromRoute] Guid id, [FromForm] UpdateBookDTO updateBookDTO)
+        public async Task<ActionResult> Update([FromRoute] Guid id, [FromForm] CreateBookDTO bookDTO)
         {
-            await _bookService.UpdateBook(id, updateBookDTO);
+            await _bookService.UpdateBook(id, bookDTO);
             return Ok();
         }
 

@@ -4,6 +4,7 @@
     {
         public static string ConvertToBase64(IFormFile imageFile)
         {
+            if (imageFile == null) return "";
             using (var memoryStream = new MemoryStream())
             {
                 imageFile.CopyTo(memoryStream);

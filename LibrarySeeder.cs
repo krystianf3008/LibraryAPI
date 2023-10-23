@@ -29,6 +29,11 @@ namespace LibraryAPI
                     _context.Book.AddRange(GetBooks());
                     _context.SaveChanges();
                 }
+                if (!_context.Role.Any())
+                {
+                    _context.Role.AddRange(GetRoles());
+                    _context.SaveChanges();
+                }
 
             }
         }
@@ -135,6 +140,29 @@ namespace LibraryAPI
     };
 
             return authors;
+        }
+        public List<Role> GetRoles()
+        {
+            List<Role> roles = new List<Role>
+        {
+            new Role 
+            {
+                Name = "User",
+                Id = 1
+            },
+            new Role
+            {
+                Name = "Admin",
+                Id = 2
+            },
+            new Role
+            {
+                Name = "Moderator",
+                Id = 3
+            },
+        };  
+
+            return roles;
         }
 
     }

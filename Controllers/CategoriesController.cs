@@ -1,31 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using LibraryAPI.DTOs;
 using LibraryAPI.Interfaces;
 using LibraryAPI.Models;
+using LibraryAPI.Models.Books;
+using LibraryAPI.Models.Categories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryAPI.Controllers
 {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class CategoriesController : ControllerBase
-        {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(Roles = "Admin")]
+    public class CategoriesController : ControllerBase
+    {
         private readonly ICategoryService _categoryService;
 
-            public CategoriesController( ICategoryService service)
-            {
-                _categoryService = service;
-            }
-        [HttpGet("/api/category/")]
-
-        public async Task<ActionResult<List<Category>>> GetAll()
+        public CategoriesController(ICategoryService service)
         {
-            return Ok(await _categoryService.GetAll());
-        }
-
-        [HttpGet("/api/category/{id}")]
-        public async Task<ActionResult<List<BookDTO>>> Get([FromRoute] int id)
-        {
-            return Ok(await _categoryService.GetBooks(id));
+            _categoryService = service;
         }
         [HttpPost("/api/category/")]
         public async Task<ActionResult> Create([FromForm] CreateCategoryDTO createCategoryDTO)
@@ -47,6 +38,20 @@ namespace LibraryAPI.Controllers
             await _categoryService.DeleteCategory(id);
             return Ok();
         }
+        [AllowAnonymous]
+        [HttpGet("/api/category/")]
+
+        public async Task<ActionResult<List<Category>>> GetAll()
+        {
+            return Ok(await _categoryService.GetAll());
+        }
+        [AllowAnonymous]
+        [HttpGet("/api/category/{id}")]
+        public async Task<ActionResult<List<BookDTO>>> Get([FromRoute] int id)
+        {
+            return Ok(await _categoryService.GetBooks(id));
+        }
+ 
 
     }
 }

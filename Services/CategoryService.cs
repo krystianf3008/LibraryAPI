@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using LibraryAPI.DTOs;
+using LibraryAPI.Models.Books;
+using LibraryAPI.Models.Categories;
 using LibraryAPI.Entities;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Interfaces;

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using LibraryAPI.DTOs;
+using LibraryAPI.Models.Authors;
+using LibraryAPI.Models.Books;
 using LibraryAPI.Entities;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using LibraryAPI.Models;
 
 namespace LibraryAPI.Services
 {
@@ -12,7 +14,7 @@ namespace LibraryAPI.Services
     {
         private readonly LibraryDbContext _dbContext;
         private readonly IMapper _mapper;
-
+        
         public AuthorService(LibraryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -22,6 +24,12 @@ namespace LibraryAPI.Services
         public async Task<IEnumerable<Author>> GetAll()
         {
             return await _dbContext.Author
+                .Where(a => a.IsVerified)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Author>> GetAuthorsToVerify()
+        {
+            return await _dbContext.Author.Where(a => !a.IsVerified)
                 .ToListAsync();
         }
         public async Task<Author> GetById(Guid id)
@@ -37,32 +45,42 @@ namespace LibraryAPI.Services
             return author;
         }
 
-        public async Task<Guid> CreateAuthor(CreateAuthorDto aurhorDTO)
+        public async Task<Guid> CreateAuthor(CreateAuthorDto aurhorDTO, string userId)
         {
             Author author = _mapper.Map<Author>(aurhorDTO);
+            author.IsVerified = false;
+            author.AddedBy = Guid.Parse(userId);
             _dbContext.Author.Add(author);
             await _dbContext.SaveChangesAsync();
             return author.Id;
         }
 
-        public async Task UpdateAuthor(Guid id, CreateAuthorDto authorDTO)
+        public async Task UpdateAuthor(Guid id, CreateAuthorDto authorDTO, string userId)
         {
+            
             var authorToUpdate = await _dbContext.Author.FirstOrDefaultAsync(c => c.Id == id);
-
+            if (authorToUpdate.AddedBy.ToString() != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
             if (authorToUpdate == null)
             {
                 throw new NotFoundException("The author you are trying to edit does not exist");
             }
 
             _mapper.Map(authorDTO, authorToUpdate);
-
+            authorToUpdate.AddedBy = Guid.Parse(userId);
+            authorToUpdate.IsVerified = false;
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAuthor(Guid id)
+        public async Task DeleteAuthor(Guid id, string userId)
         {
             var author = await _dbContext.Author.FirstOrDefaultAsync(c => c.Id == id);
-
+            if (author.AddedBy.ToString() != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
             if (author == null)
             {
                 throw new NotFoundException("The author you are trying to delete does not exist");
@@ -82,6 +100,19 @@ namespace LibraryAPI.Services
 
             return await _dbContext.Book.ProjectTo<BookDTO>(_mapper.ConfigurationProvider).Where(b => b.AuthorFullName == author.FullName).ToListAsync();
         }
+        public async Task VerifyAuthor(Guid id)
+        {
+            var author = await _dbContext.Author.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (author == null)
+            {
+                throw new NotFoundException("The author you are trying to delete does not exist");
+            }
+            author.IsVerified = true;
+            await _dbContext.SaveChangesAsync();
+
+        }
+
     }
 }
 

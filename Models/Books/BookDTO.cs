@@ -1,6 +1,6 @@
 ﻿using LibraryAPI.Models;
 
-namespace LibraryAPI.DTOs
+namespace LibraryAPI.Models.Books
 {
     //This DTO was created to request `GetAll` for optimization purposes
     public class BookDTO

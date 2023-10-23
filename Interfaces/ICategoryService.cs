@@ -1,4 +1,5 @@
-﻿using LibraryAPI.DTOs;
+﻿using LibraryAPI.Models.Books;
+using LibraryAPI.Models.Categories;
 using LibraryAPI.Models;
 
 namespace LibraryAPI.Interfaces

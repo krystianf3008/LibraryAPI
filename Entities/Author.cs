@@ -8,5 +8,7 @@
         public int BirthYear { get; set; }
         public string Description { get; set; }
         public string Base64Photo { get; set; }
+        public Guid? AddedBy { get; set; }
+        public bool IsVerified { get; set; }
     }
 }

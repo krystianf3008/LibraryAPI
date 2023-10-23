@@ -7,6 +7,8 @@ namespace LibraryAPI.Entities
         public DbSet<Book> Book { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Author> Author { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<User> User { get; set; }
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options)
         : base(options)
         {
@@ -15,15 +17,10 @@ namespace LibraryAPI.Entities
         {
         modelBuilder.Entity<Book>()
             .Property(b => b.Title)
-            .IsRequired()
-            .HasMaxLength(100);
-        modelBuilder.Entity<Book>()
-            .Property(b => b.Description)
-            .HasMaxLength(1000);
+            .IsRequired();
         modelBuilder.Entity<Category>()
             .Property(c => c.Name)
-            .IsRequired()
-            .HasMaxLength(150);
+            .IsRequired();
         modelBuilder.Entity<Category>()
             .Property(c => c.Id)
             .ValueGeneratedOnAdd();
@@ -35,8 +32,20 @@ namespace LibraryAPI.Entities
             .IsUnique();
         modelBuilder.Entity<Author>()
             .Property(a => a.FullName)
-            .IsRequired()
-            .HasMaxLength(150);
+            .IsRequired();
+        modelBuilder.Entity<User>()
+            .Property(u => u.Name)
+            .IsRequired();
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email)
+            .IsRequired();
+        modelBuilder.Entity<User>()
+            .Property(u => u.PasswordHash)
+            .IsRequired();
+        modelBuilder.Entity<Role>()
+            .Property(r => r.Name)
+            .IsRequired();
+
         }
     }
 }

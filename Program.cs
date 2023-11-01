@@ -41,7 +41,8 @@ namespace LibraryAPI
             builder.Services.AddControllers().AddFluentValidation();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDB")));
+            builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer($"Data Source={Environment.GetEnvironmentVariable("DB_HOST")};User ID=sa;Password={Environment.GetEnvironmentVariable("DB_SA_PASSWORD")};TrustServerCertificate=True"));
+
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddSingleton(authenticationSettings);  
             builder.Services.AddScoped<IBookService, BookService>();
@@ -89,6 +90,10 @@ namespace LibraryAPI
                 {
                     var services = scope.ServiceProvider;
                     var dbContext = services.GetRequiredService<LibraryDbContext>();
+                    if (dbContext.Database.GetPendingMigrations().Any())
+                    {
+                        dbContext.Database.Migrate();
+                    }
                     LibrarySeeder seeder = new LibrarySeeder(dbContext);
                     seeder.Seed();
                 }

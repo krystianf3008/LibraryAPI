@@ -45,6 +45,9 @@ namespace LibraryAPI.Entities
         modelBuilder.Entity<Role>()
             .Property(r => r.Name)
             .IsRequired();
+        modelBuilder.Entity<Role>()
+        .Property(r => r.Id)
+        .ValueGeneratedNever();
 
         }
     }

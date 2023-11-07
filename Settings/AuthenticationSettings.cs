@@ -1,6 +1,6 @@
-﻿namespace LibraryAPI
+﻿namespace LibraryAPI.Settings
 {
-    public class AuthenticationSettings
+    public record AuthenticationSettings
     {
         public string JwtKey { get; set; }
         public int JwtExpireHours { get; set; }

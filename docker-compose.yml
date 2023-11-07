@@ -1,9 +1,7 @@
 version: '3.4'
 
-
 networks:
     backend:
-
 
 services:
   libraryapi:
@@ -17,17 +15,23 @@ services:
     ports:
         - 8001:80
         - 8003:443
-    environment:
-        - DB_HOST=librarydb
-        - DB_NAME=Library
-        - DB_SA_PASSWORD=q6ZOc32APBvTelKK6nlb0g31rVcWTq
+
   librarydb:
-     container_name : Library-DB
-     image : mcr.microsoft.com/mssql/server:2022-latest
+     container_name: Library-DB
+     image: mcr.microsoft.com/mssql/server:2022-latest
      networks:
         - backend
      ports:
         - 8002:1433
      environment:
         - ACCEPT_EULA=Y
-        - MSSQL_SA_PASSWORD=q6ZOc32APBvTelKK6nlb0g31rVcWTq    
+        - MSSQL_SA_PASSWORD=q6ZOc32APBvTelKK6nlb0g31rVcWTq
+
+  mailhog:
+     container_name: MailHog
+     image: mailhog/mailhog
+     ports:
+        - 8004:8025 
+        - 8005:1025  
+     networks:
+        - backend

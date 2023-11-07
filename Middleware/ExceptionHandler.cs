@@ -31,11 +31,11 @@ namespace LibraryAPI.Middleware
                 context.Response.StatusCode = 401;
                 context.Response.WriteAsync(ex.Message);
             }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = 500;
-                context.Response.WriteAsync("Something went wrong");
-            }
+          //  catch (Exception ex)
+            //{
+             //   context.Response.StatusCode = 500;
+              //  context.Response.WriteAsync("Something went wrong");
+            //}
             
                 
 

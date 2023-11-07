@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LibraryAPI.Settings;
 
 namespace LibraryAPI.Services
 {
@@ -20,14 +21,16 @@ namespace LibraryAPI.Services
         private readonly LibraryDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IEmailService _emailService;
         private readonly AuthenticationSettings _authenticationSettings;
 
-        public UserService(LibraryDbContext dbContext, IMapper mapper, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public UserService(LibraryDbContext dbContext, IMapper mapper, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings, IEmailService emailService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
+            _emailService = emailService;
         }
 
         public async Task<IEnumerable<UserDTO>> GetAll()
@@ -58,6 +61,7 @@ namespace LibraryAPI.Services
             user.RoleId = 1;
             _dbContext.User.Add(user);
             await _dbContext.SaveChangesAsync();
+            await _emailService.SendVerificationEmailAsync(user.Email,user.Name,user.VerificationToken);
             return user.Id;
         }
         public async Task VerifyUser(string token)
@@ -80,6 +84,7 @@ namespace LibraryAPI.Services
             }
             user.ResetPasswordToken = Guid.NewGuid().ToString();
             user.ResetPasswordTokenExpires = DateTime.Now.AddHours(1);
+            await _emailService.SendResetPasswordEmailAsync(user.Email, user.Name, user.VerificationToken);
             await _dbContext.SaveChangesAsync();
         }
         public async Task ResetPassword(UserResetPasswordDTO userDTO)

@@ -6,6 +6,7 @@ using LibraryAPI.Entities;
 using LibraryAPI.Interfaces;
 using LibraryAPI.Middleware;
 using LibraryAPI.Services;
+using LibraryAPI.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +21,10 @@ namespace LibraryAPI
         {
             var builder = WebApplication.CreateBuilder(args);
             var authenticationSettings = new AuthenticationSettings();
+            var smtpSettings = new SmtpSettings();
             builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+            builder.Configuration.GetSection("SmtpSettings").Bind(smtpSettings);
+
             builder.Services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = "Bearer";
@@ -37,22 +41,23 @@ namespace LibraryAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
                 };
             });
-            
+
             builder.Services.AddControllers().AddFluentValidation();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer($"Data Source={Environment.GetEnvironmentVariable("DB_HOST")};User ID=sa;Password={Environment.GetEnvironmentVariable("DB_SA_PASSWORD")};TrustServerCertificate=True"));
-
+            builder.Services.AddDbContext<LibraryDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("LibraryDB")));
             builder.Services.AddAutoMapper(typeof(Program));
-            builder.Services.AddSingleton(authenticationSettings);  
+            builder.Services.AddSingleton(authenticationSettings);
+            builder.Services.AddSingleton(smtpSettings);
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             builder.Services.AddScoped<ExceptionHandler>();
-            builder.Services.AddScoped<IValidator<RegisterUserDTO>,RegisterUserDTOValidator>();
-            builder.Services.AddScoped<IValidator<UserResetPasswordDTO>,UserResetPasswordDTOValidator>();
+            builder.Services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserDTOValidator>();
+            builder.Services.AddScoped<IValidator<UserResetPasswordDTO>, UserResetPasswordDTOValidator>();
             builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Library API", Version = "v1" });

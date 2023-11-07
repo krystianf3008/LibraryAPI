@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <p>Dear user, {Name},</p>
+    <p>Click the link below to verify your Library account:</p>
+    <a href="https://localhost:8003/api/user/verify?token={Token}">Verify Account</a>
+</body>
+</html>
